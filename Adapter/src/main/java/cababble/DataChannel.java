@@ -6,6 +6,7 @@ import ggj.event.process.EventQueue;
 import java.util.Scanner;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class DataChannel<I extends Event, O extends Event> implements Runnable {
     private EventQueue<O> engineQueue;
@@ -15,6 +16,8 @@ public class DataChannel<I extends Event, O extends Event> implements Runnable {
     private final Function<O, String> outputParser;
     private final Consumer<String> output;
     private final Scanner scanner = new Scanner(System.in);
+    private Predicate<I> exitSignalPredicate;
+    private Predicate<O> exitEventPredicate;
 
     public DataChannel(Consumer<String> output,
                        Function<String, I> eventParser,
@@ -35,7 +38,7 @@ public class DataChannel<I extends Event, O extends Event> implements Runnable {
                 O o = null;
                 try {
                     o = this.engineQueue.take();
-                    if (isExitSignal(o)){
+                    if (isExitEvent(o)){
                         exit();
                         return;
                     }
@@ -50,11 +53,17 @@ public class DataChannel<I extends Event, O extends Event> implements Runnable {
        return clientQueue;
     }
 
-    private boolean isExitSignal(O o) {
+    private boolean isExitEvent(O event) {
+        if (exitEventPredicate != null) {
+            return exitEventPredicate.test(event);
+        }
         return false;
     }
 
-    private boolean isExitEvent(I event) {
+    private boolean isExitSignal(I signal) {
+        if (exitSignalPredicate != null) {
+            return exitSignalPredicate.test(signal);
+        }
         return false;
     }
     private void exit() {
@@ -70,10 +79,10 @@ public class DataChannel<I extends Event, O extends Event> implements Runnable {
     @Override
     public void run() {
         while (true) {
-            String input = scanner.next();
+            String input = scanner.nextLine();
             try {
                 I event = eventParser.apply(input);
-                if (isExitEvent(event)){
+                if (isExitSignal(event)){
                     exit();
                     return;
                 } else
@@ -86,4 +95,11 @@ public class DataChannel<I extends Event, O extends Event> implements Runnable {
         }
     }
 
+    public void setExitEventPredicate(Predicate<O> exitEventPredicate) {
+        this.exitEventPredicate = exitEventPredicate;
+    }
+
+    public void setExitSignalPredicate(Predicate<I> exitSignalPredicate) {
+        this.exitSignalPredicate = exitSignalPredicate;
+    }
 }

@@ -16,7 +16,7 @@ public class ToUserEvent implements Function<String, UserEvent> {
     public static final String illegal="{}";
 
     private boolean isValid(String s) {
-        if (s.contains("{"))
+        if (s.contains(EVENT_TYPE_SEPARATOR))
             return true;
         return false;
     }
@@ -27,6 +27,10 @@ public class ToUserEvent implements Function<String, UserEvent> {
         }
         String[] head_body = s.split(EVENT_TYPE_SEPARATOR);
         User_Event type = valueOf(head_body[0].toUpperCase());
+        if (type == EXIT){
+            //TODO improve this
+            return new UserEvent(EXIT, null);
+        }
         String body = head_body[1];
         for (char c : illegal.toCharArray()) {
             body = body.replace(c + "", "");

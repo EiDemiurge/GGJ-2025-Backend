@@ -20,6 +20,9 @@ public class EngineLauncher {
         return ProcessorLauncher.launch();
     }
 
+    public static void mockClientQueue () {
+        ProcessorLauncher.mockClientQueue();
+    }
     public static void clientQueue(EventQueue<User_Event.UserEvent> userEvents) {
         ProcessorLauncher.clientQueue(userEvents);
     }

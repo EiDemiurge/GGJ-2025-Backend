@@ -18,11 +18,18 @@ public class Cababble {
                 new ToUserEvent(), new FromGuiEvent());
         EventQueue<UserEvent> userEvents = channel.start(guiEventQueue);
 
-        EngineLauncher.clientQueue(userEvents);
+        channel.setExitSignalPredicate(e -> e.type() == EXIT);
+        channel.setExitEventPredicate(e -> e.type() == GAME_EXIT);
+
+        //kill if idle?
 
         if (args.length>0){
+            EngineLauncher.mockClientQueue();
             testUserEventsViaString(channel.getScanner());
             testUserEvents(userEvents);
+        } else {
+
+            EngineLauncher.clientQueue(userEvents);
         }
     }
 

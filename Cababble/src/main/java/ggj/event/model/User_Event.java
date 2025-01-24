@@ -8,7 +8,7 @@ public enum User_Event implements EventType {
     MSG_SENT("roomId", "message"),
     RE_ROLL,
     ROOM_SWITCH("roomId"),
-
+    EXIT
 ;
     String[] stdKeys;
 

@@ -17,6 +17,9 @@ public class Format {
         return null;
     }
 
+    public static String eventToClient(Event<?> event) {
+        return format("%s: %s", event.type().toString(), event.args());
+    }
     public static String event(Event<?> event) {
         return format("%s - %s: %s", event.getClass().getSimpleName(), event.type().toString(), event.args());
     }

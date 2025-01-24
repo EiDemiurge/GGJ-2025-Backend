@@ -26,6 +26,7 @@ public enum Gui_Event implements EventType {
 
     INFO_CHANGED,
 
+    GAME_EXIT,
 ;
     String[] stdKeys;
 

@@ -43,7 +43,8 @@ public class GameEventHandler implements EventHandler<Game_Event.GameEvent> {
                 int roomId = gameEvent.args().num("roomId");
                 var message = gameEvent.args().string("message");
                 if (!EntityMapper.isUserInRoom(userId, roomId)){
-                    throw new RuntimeException("User cannot send message to this room: " + Format.event(gameEvent));
+                   ggj.util.Log.error("User cannot send message to this room: " + Format.event(gameEvent));
+                    break;
                 }
                 var msg = new Message(new ModelChat.ChatUserMessage(userId, roomId, message, 0, 0));
                 //added to MAPS

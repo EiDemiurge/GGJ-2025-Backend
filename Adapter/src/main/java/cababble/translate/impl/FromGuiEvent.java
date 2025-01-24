@@ -12,6 +12,6 @@ public class FromGuiEvent implements Function<GuiEvent, String> {
         /*
         EVENT_TYPE:{key1=val1| ...
          */
-        return Format.event(event);
+        return Format.eventToClient(event);
     }
 }
